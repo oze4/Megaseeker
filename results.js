@@ -92,9 +92,9 @@ const printImages = (imageSrcList) => {
       // Add ability to view seasons
       ////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////
-      const seasonsElement = document.createElement("button");
-      seasonsElement.innerHTML = "View Seasons";
-      seasonsElement.onclick = async function(event) {
+      const viewSeasonsButton = document.createElement("button");
+      viewSeasonsButton.innerHTML = "View Seasons";
+      viewSeasonsButton.onclick = async function(event) {
         if (!link.show.id) {
           return alert('No seasons found!');
         }
@@ -116,7 +116,7 @@ const printImages = (imageSrcList) => {
           alert(`Something went wrong while trying to get seasons! Error : ${e.message}`);
         }
       }
-      showInfoDiv.appendChild(seasonsElement);
+      showInfoDiv.appendChild(viewSeasonsButton);
       ////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////
 
