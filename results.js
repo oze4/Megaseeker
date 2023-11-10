@@ -109,9 +109,9 @@ const printImages = (imageSrcList) => {
           const seasons = res.data;
           // This is just a rough way to show the seasons.
           // You can make this prettier if you wish.
-          const seasonsElement = document.createElement("pre");
-          seasonsElement.innerText = JSON.stringify(seasons, null, 2);
-          showInfoDiv.appendChild(seasonsElement);
+          const seasonsDataElement = document.createElement("pre");
+          seasonsDataElement.innerText = JSON.stringify(seasons, null, 2);
+          showInfoDiv.appendChild(seasonsDataElement);
         } catch (e) {
           alert(`Something went wrong while trying to get seasons! Error : ${e.message}`);
         }
