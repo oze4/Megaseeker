@@ -8,8 +8,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const config = { params: { q: userQuery }, headers: {} };
   const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
 
+  const episodeConfig = { headers: {} };
+  const episodeResponse = await axios.get(`https://api.tvmaze.com/shows/${firstShowId}/episodebynumber?season=1&number=1`, episodeConfig);
+
+
   // Process and display results on the results page
   printImages(res.data);
+  pntEpisodeInfo(episodeResponse.data);ri
 });
 
 const printImages = (imageSrcList) => {
