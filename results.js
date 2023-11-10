@@ -8,28 +8,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const config = { params: { q: userQuery }, headers: {} };
   const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   // You could add a separate page to show seasons, this way all we need to do is add a link to each shows data.
   // I am adding a property called "seasonsLink".
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   const finalData = res.data.map((obj) => {
-    let seasonsLink = '';
-    if (obj.show.id) {
-      seasonsLink = `http://api.tvmaze.com/shows/${obj.show.id}/seasons`;
-    }
-    obj.show.seasonsLink = seasonsLink;
+    obj.show.seasonsLink = obj.show.id ? `http://api.tvmaze.com/shows/${obj.show.id}/seasons` : null;
     return obj;
-    /*
-    return {
-      ...obj,
-      show: {
-        ...obj.show,
-        seasonsLink: obj.show.id ? `http://api.tvmaze.com/shows/${obj.show.id}/seasons` : '',
-      }
-    }
-    */
   });
 
   // Process and display results on the results page
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  //printImages(res.data);
   printImages(finalData);
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 });
 
@@ -93,7 +87,11 @@ const printImages = (imageSrcList) => {
       resultsContainer.appendChild(img);
       resultsContainer.appendChild(showInfoDiv);
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
       // Add ability to view seasons
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
       const seasonsElement = document.createElement("button");
       seasonsElement.innerHTML = "View Seasons";
       seasonsElement.onclick = async function(event) {
@@ -102,6 +100,8 @@ const printImages = (imageSrcList) => {
             const res = await axios.get(link.show.seasonsLink);
             if (res.status === 200) {
               const seasons = res.data;
+              // This is just a rough way to show the seasons.
+              // You can make this prettier if you wish.
               const seasonsElement = document.createElement("pre");
               seasonsElement.innerText = JSON.stringify(seasons, null, 2);
               showInfoDiv.appendChild(seasonsElement);
@@ -116,6 +116,8 @@ const printImages = (imageSrcList) => {
         }
       }
       showInfoDiv.appendChild(seasonsElement);
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
   }
