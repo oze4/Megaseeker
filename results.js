@@ -99,24 +99,25 @@ const printImages = (imageSrcList) => {
       const seasonsElement = document.createElement("button");
       seasonsElement.innerHTML = "View Seasons";
       seasonsElement.onclick = async function(event) {
-        if (link.show.seasonsLink) {
-          try {
-            const res = await axios.get(link.show.seasonsLink);
-            if (res.status === 200) {
-              const seasons = res.data;
-              // This is just a rough way to show the seasons.
-              // You can make this prettier if you wish.
-              const seasonsElement = document.createElement("pre");
-              seasonsElement.innerText = JSON.stringify(seasons, null, 2);
-              showInfoDiv.appendChild(seasonsElement);
-            } else {
-              throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
-            }
-          } catch (e) {
-            alert(`Something went wrong while trying to get seasons! Error : ${e}`);
-          }
-        } else {
-          alert("No seasons found!");
+        if (!link.show.seasonsLink) {
+          return alert('No seasons found!');
+        }
+
+        try {
+          const res = await axios.get(link.show.seasonsLink);
+
+          if (res.status !== 200) { // If response is not OK
+            throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
+          } 
+
+          const seasons = res.data;
+          // This is just a rough way to show the seasons.
+          // You can make this prettier if you wish.
+          const seasonsElement = document.createElement("pre");
+          seasonsElement.innerText = JSON.stringify(seasons, null, 2);
+          showInfoDiv.appendChild(seasonsElement);
+        } catch (e) {
+          alert(`Something went wrong while trying to get seasons! Error : ${e.message}`);
         }
       }
       showInfoDiv.appendChild(seasonsElement);
