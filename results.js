@@ -1,3 +1,17 @@
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * SCROLL DOWN TO THE BOTTOM TO SEE CHANGES I MADE
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Retrieve the query parameter from the URL
   const queryString = window.location.search;
@@ -8,26 +22,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const config = { params: { q: userQuery }, headers: {} };
   const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  // You could add a separate page to show seasons, or you could add a button which goes out to the API
-  //// and grabs the seasons. This way all we need to do is add a link to each shows data.
-  // I am adding a property called "seasonsLink" to each show returned.
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  const finalData = res.data.map((obj) => {
-    obj.show.seasonsLink = obj.show.id ? `http://api.tvmaze.com/shows/${obj.show.id}/seasons` : null;
-    return obj;
-  });
-
   // Process and display results on the results page
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  // I changed this, too.
-  /* 
-    printImages(res.data); 
-  */
-  printImages(finalData);
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  printImages(res.data); 
 
 });
 
@@ -99,12 +95,12 @@ const printImages = (imageSrcList) => {
       const seasonsElement = document.createElement("button");
       seasonsElement.innerHTML = "View Seasons";
       seasonsElement.onclick = async function(event) {
-        if (!link.show.seasonsLink) {
+        if (!link.show.id) {
           return alert('No seasons found!');
         }
 
         try {
-          const res = await axios.get(link.show.seasonsLink);
+          const res = await axios.get(`http://api.tvmaze.com/shows/${link.show.id}/seasons`);
 
           if (res.status !== 200) { // If response is not OK
             throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
