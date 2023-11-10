@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+}
+
+#results-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: auto; 
+  margin: 0 auto;
+  background: linear-gradient(#e66465, #9198e5);
+}
+nav {
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  overflow: hidden;
+  max-width:auto;
+  margin: 0 auto;
+  background: linear-gradient(#e66465, #9198e5);
+}
