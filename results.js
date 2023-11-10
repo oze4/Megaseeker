@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Process and display results on the results page
   printImages(res.data);
-  pntEpisodeInfo(episodeResponse.data);ri
+  printEpisodeInfo(episodeResponse.data);
 });
 
 const printImages = (imageSrcList) => {
