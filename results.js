@@ -8,8 +8,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const config = { params: { q: userQuery }, headers: {} };
   const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
 
+  // You could add a separate page to show seasons, this way all we need to do is add a link to each shows data.
+  // I am adding a property called "seasonsLink".
+  const finalData = res.data.map((obj) => {
+    let seasonsLink = '';
+    if (obj.show.id) {
+      seasonsLink = `http://api.tvmaze.com/shows/${obj.show.id}/seasons`;
+    }
+    obj.show.seasonsLink = seasonsLink;
+    return obj;
+    /*
+    return {
+      ...obj,
+      show: {
+        ...obj.show,
+        seasonsLink: obj.show.id ? `http://api.tvmaze.com/shows/${obj.show.id}/seasons` : '',
+      }
+    }
+    */
+  });
+
   // Process and display results on the results page
-  printImages(res.data);
+  printImages(finalData);
 
 });
 
@@ -72,6 +92,31 @@ const printImages = (imageSrcList) => {
             // Append elements to the results container
       resultsContainer.appendChild(img);
       resultsContainer.appendChild(showInfoDiv);
+
+      // Add ability to view seasons
+      const seasonsElement = document.createElement("button");
+      seasonsElement.innerHTML = "View Seasons";
+      seasonsElement.onclick = async function(event) {
+        if (link.show.seasonsLink) {
+          try {
+            const res = await axios.get(link.show.seasonsLink);
+            if (res.status === 200) {
+              const seasons = res.data;
+              const seasonsElement = document.createElement("pre");
+              seasonsElement.innerText = JSON.stringify(seasons, null, 2);
+              showInfoDiv.appendChild(seasonsElement);
+            } else {
+              throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
+            }
+          } catch (e) {
+            alert(`Something went wrong while trying to get seasons! Error : ${e}`);
+          }
+        } else {
+          alert("No seasons found!");
+        }
+      }
+      showInfoDiv.appendChild(seasonsElement);
+
     }
   }
 };
