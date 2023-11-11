@@ -11,70 +11,129 @@
  * 
  * 
  */
+const EL_RESULTS_CONTAINER = document.getElementById('results-container');
+EL_RESULTS_CONTAINER.innerHTML = "Loading...";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Retrieve the query parameter from the URL
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const userQuery = urlParams.get('q');
+  const urlParams = new URLSearchParams(window.location.search);
+  const showId = urlParams.get('id');
 
-  // Fetch data based on the query parameter
-  const config = { params: { q: userQuery }, headers: {} };
-  const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
-
+  const res = await axios.get(`http://api.tvmaze.com/shows/${showId}?embed[]=episodes&embed=cast`);
+  console.log(res.data);
   // Process and display results on the results page
-  printImages(res.data); 
+  renderShow(res.data);
 
 });
 
-const printImages = (imageSrcList) => {
-  const resultsContainer = document.getElementById('results-container');
+const renderShow = (show) => {
+  EL_RESULTS_CONTAINER.innerHTML = '';
+  if (show.image) {
+    // Create elements for image and show information
+    const img = document.createElement("IMG");
+    img.src = show.image.medium;
 
+    const showInfoDiv = document.createElement("div");
+    const showTitle = document.createElement("section");
+    showTitle.innerHTML = `Title: ${show.name}`;
+    showInfoDiv.appendChild(showTitle);
+
+    const showSummary = document.createElement("p");
+    showSummary.innerHTML = `Summary: ${show.summary}`;
+    showInfoDiv.appendChild(showSummary);
+
+    const showGenre = document.createElement("p"); // Change from "data" to "p"
+    showGenre.innerHTML = `Genre: ${show.genres.join(', ')}`;
+    showInfoDiv.appendChild(showGenre);
+
+    const showStatus = document.createElement("p");
+    showStatus.innerHTML = `Status = ${show.status}`;
+    showInfoDiv.appendChild(showStatus);
+
+    const showRuntime = document.createElement("p");
+    showRuntime.innerHTML = `Runtime: ${show.runtime} minutes`;
+    showInfoDiv.append(showRuntime);
+
+    const showRating = document.createElement("p");
+    showRating.innerHTML = `Rating: ${show.rating ? show.rating.average : 'N/A'}`;
+    showInfoDiv.appendChild(showRating);
+
+    const showSchedule = document.createElement("p");
+    const scheduleString = show.schedule ? `${show.schedule.days.join(', ')} at ${show.schedule.time}` : 'Not Available';
+    showSchedule.innerHTML = `Schedule: ${scheduleString}`;
+    showInfoDiv.appendChild(showSchedule);
+
+    const showType = document.createElement("p");
+    showType.innerHTML = `Type: ${show.type}`;
+    showInfoDiv.appendChild(showType);
+
+    const showNetwork = document.createElement("p");
+
+    if (show.network) {
+      const networkName = show.network.name;
+      const networkCountry = show.network.country ? show.network.country.name : 'N/A';
+      const networkString = `${networkName} in ${networkCountry}`;
+      showNetwork.innerHTML = `Network: ${networkString}`;
+    } else {
+      showNetwork.innerHTML = 'Network: N/A';
+    }
+
+    showInfoDiv.appendChild(showNetwork);
+
+    // Append elements to the results container
+    EL_RESULTS_CONTAINER.appendChild(img);
+    EL_RESULTS_CONTAINER.appendChild(showInfoDiv);
+  } else {
+    const nothingFound = document.createElement("p");
+    nothingFound.innerHTML = "Show image not found."
+    EL_RESULTS_CONTAINER.append(nothingFound);
+  }
+  /*
   for (let link of imageSrcList) {
-    if (link.show.image) {
+    if (show.image) {
       // Create elements for image and show information
       const img = document.createElement("IMG");
-      img.src = link.show.image.medium;
+      img.src = show.image.medium;
 
       const showInfoDiv = document.createElement("div");
       const showTitle = document.createElement("section");
-      showTitle.innerHTML = `Title: ${link.show.name}`;
+      showTitle.innerHTML = `Title: ${show.name}`;
       showInfoDiv.appendChild(showTitle);
 
       const showSummary = document.createElement("p");
-      showSummary.innerHTML = `Summary: ${link.show.summary}`;
+      showSummary.innerHTML = `Summary: ${show.summary}`;
       showInfoDiv.appendChild(showSummary);
 
       const showGenre = document.createElement("p"); // Change from "data" to "p"
-      showGenre.innerHTML = `Genre: ${link.show.genres.join(', ')}`;
+      showGenre.innerHTML = `Genre: ${show.genres.join(', ')}`;
       showInfoDiv.appendChild(showGenre);
 
       const showStatus = document.createElement("p");
-      showStatus.innerHTML = `Status = ${link.show.status}`;
+      showStatus.innerHTML = `Status = ${show.status}`;
       showInfoDiv.appendChild(showStatus);
 
       const showRuntime = document.createElement("p");
-      showRuntime.innerHTML = `Runtime: ${link.show.runtime} minutes`;
+      showRuntime.innerHTML = `Runtime: ${show.runtime} minutes`;
       showInfoDiv.append(showRuntime);
 
       const showRating = document.createElement("p");
-      showRating.innerHTML = `Rating: ${link.show.rating ? link.show.rating.average : 'N/A'}`;
+      showRating.innerHTML = `Rating: ${show.rating ? show.rating.average : 'N/A'}`;
       showInfoDiv.appendChild(showRating);
 
       const showSchedule = document.createElement("p");
-      const scheduleString = link.show.schedule ? `${link.show.schedule.days.join(', ')} at ${link.show.schedule.time}` : 'Not Available';
+      const scheduleString = show.schedule ? `${show.schedule.days.join(', ')} at ${show.schedule.time}` : 'Not Available';
       showSchedule.innerHTML = `Schedule: ${scheduleString}`;
       showInfoDiv.appendChild(showSchedule);
 
       const showType = document.createElement("p");
-      showType.innerHTML = `Type: ${link.show.type}`;
+      showType.innerHTML = `Type: ${show.type}`;
       showInfoDiv.appendChild(showType);
 
       const showNetwork = document.createElement("p");
 
-      if (link.show.network) {
-        const networkName = link.show.network.name;
-        const networkCountry = link.show.network.country ? link.show.network.country.name : 'N/A';
+      if (show.network) {
+        const networkName = show.network.name;
+        const networkCountry = show.network.country ? show.network.country.name : 'N/A';
         const networkString = `${networkName} in ${networkCountry}`;
         showNetwork.innerHTML = `Network: ${networkString}`;
       } else {
@@ -84,8 +143,8 @@ const printImages = (imageSrcList) => {
       showInfoDiv.appendChild(showNetwork);
       
             // Append elements to the results container
-      resultsContainer.appendChild(img);
-      resultsContainer.appendChild(showInfoDiv);
+      EL_RESULTS_CONTAINER.appendChild(img);
+      EL_RESULTS_CONTAINER.appendChild(showInfoDiv);
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,12 +154,12 @@ const printImages = (imageSrcList) => {
       const viewSeasonsButton = document.createElement("button");
       viewSeasonsButton.innerHTML = "View Seasons";
       viewSeasonsButton.onclick = async function(event) {
-        if (!link.show.id) {
+        if (!show.id) {
           return alert('No seasons found!');
         }
 
         try {
-          const res = await axios.get(`http://api.tvmaze.com/shows/${link.show.id}/seasons`);
+          const res = await axios.get(`http://api.tvmaze.com/shows/${show.id}/seasons`);
 
           if (res.status !== 200) { // If response is not OK
             throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
@@ -122,4 +181,5 @@ const printImages = (imageSrcList) => {
 
     }
   }
+  */
 };

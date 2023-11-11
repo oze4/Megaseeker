@@ -1,55 +1,32 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }  
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: auto; 
-    margin: 0 auto;
-    background: linear-gradient(-50deg, orange 30%, cyan 100%);
-    }
-   input
-  {
-    width: min-content;
-    height: fit-content;
-    border-radius: 10px;
-    font-size: 10%; 
-    padding: 10px;
-    border: none;
-  }
-  .megaseeker-logo {
-    font-size: 75px; 
-  }
-  
-  .megaseeker-logo span {
-    display: inline-block;
-    border-radius: 10px; 
-  }
+  background: linear-gradient(-50deg, orange 30%, cyan 100%);
+}
 
-  .m {
-    color:blue;
-  }
-  .e 
-  {
-    color:green;
-  } 
-  .g {
-    color:orange;
-  }
-  .a {
-    color:red;
-  }
-  .s {
-    color:purple;
-  }
-  .k {
-    color: teal;
-  }
-  .r 
-  {
-    color: darkgreen;
-  }
+.root {
+  min-height: 100vh;
+}
+
+.fs-75px {
+  font-size: 75px;
+}
+
+.search-results-container {
+  overflow: scroll;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  max-height: 25vh;
+}
+
+.search-results-item {
+  max-height: 10%;
+}
+
+.search-results-item:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+
+.search-results-item p {
+  font-size: 10px;
+}
