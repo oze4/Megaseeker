@@ -5,7 +5,7 @@ const EL_SEARCH_INPUT = document.querySelector("#searchQuery");
 EL_SEARCH_INPUT.addEventListener('keyup', debounce(handleSearchKeyUp, 1000));
 
 function handleSearchResultsItemClick(event, id) {
-  window.location = `Megaseeker/results.html?id=${id}`;
+  window.location = `/results.html?id=${id}`;
 }
 
 async function handleSearchKeyUp(event) {
