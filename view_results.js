@@ -1,11 +1,20 @@
 // view_results.js
+/**
+ * THIS FILE SHOULD REALLY BE CALLED VIEW SEASONS
+ */
 
 document.addEventListener("DOMContentLoaded", async () => {
   const resultsContainer = document.getElementById('results-container');
+  const urlParams = new URLSearchParams(window.location.search);
+  const showId = urlParams.get('id');
 
   try {
+    if (!showId) {
+      throw new Error("Show ID not found, unable to gather data.");
+    }
+    
     // Fetch data from the API endpoint
-    const response = await fetch('https://api.tvmaze.com/shows/1/seasons');
+    const response = await fetch(`https://api.tvmaze.com/shows/${showId}/seasons`);
     const seasonsData = await response.json();
 
     // Process and display results on the page

@@ -19,11 +19,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userQuery = urlParams.get('q');
 
   // Fetch data based on the query parameter
-  const config = { params: { q: userQuery }, headers: {} };
+  const config = {
+    params: {
+      q: userQuery
+    },
+    headers: {}
+  };
   const res = await axios.get(`http://api.tvmaze.com/search/shows/`, config);
 
   // Process and display results on the results page
-  printImages(res.data); 
+  printImages(res.data);
 
 });
 
@@ -79,31 +84,31 @@ const printImages = (imageSrcList) => {
       showInfoDiv.appendChild(showSchedule);
 
       const webChannelInfo = document.createElement("p");
-webChannelInfo.innerHTML = `Web Channel: ${link.show.webChannel ? link.show.webChannel.name : 'N/A'}`;
-showInfoDiv.appendChild(webChannelInfo);
+      webChannelInfo.innerHTML = `Web Channel: ${link.show.webChannel ? link.show.webChannel.name : 'N/A'}`;
+      showInfoDiv.appendChild(webChannelInfo);
 
-     // Assuming 'link.show.updated' contains the Unix timestamp
-const updatedTimestamp = link.show.updated;
+      // Assuming 'link.show.updated' contains the Unix timestamp
+      const updatedTimestamp = link.show.updated;
 
-// Convert Unix timestamp to a Date object
-const updatedDate = new Date(updatedTimestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
+      // Convert Unix timestamp to a Date object
+      const updatedDate = new Date(updatedTimestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
 
-// Create a paragraph element for displaying the updated date
-const updatedInfo = document.createElement("p");
-updatedInfo.innerHTML = `Last Updated: ${updatedDate.toLocaleString()}`;
+      // Create a paragraph element for displaying the updated date
+      const updatedInfo = document.createElement("p");
+      updatedInfo.innerHTML = `Last Updated: ${updatedDate.toLocaleString()}`;
 
-// Append the element to the show information container
-showInfoDiv.appendChild(updatedInfo);
+      // Append the element to the show information container
+      showInfoDiv.appendChild(updatedInfo);
 
-const officialSiteInfo = document.createElement("p");
-const officialSiteLink = document.createElement("a");
+      const officialSiteInfo = document.createElement("p");
+      const officialSiteLink = document.createElement("a");
 
-officialSiteLink.href = link.show.officialSite || '#'; // Set the href attribute
-officialSiteLink.target = "_blank"; // Open the link in a new tab/window
+      officialSiteLink.href = link.show.officialSite || '#'; // Set the href attribute
+      officialSiteLink.target = "_blank"; // Open the link in a new tab/window
 
-officialSiteLink.textContent = 'Official Site'; // Displayed text for the link
-officialSiteInfo.appendChild(officialSiteLink);
-showInfoDiv.appendChild(officialSiteInfo);
+      officialSiteLink.textContent = 'Official Site'; // Displayed text for the link
+      officialSiteInfo.appendChild(officialSiteLink);
+      showInfoDiv.appendChild(officialSiteInfo);
 
       const showType = document.createElement("p");
       showType.innerHTML = `Type: ${link.show.type}`;
@@ -119,71 +124,38 @@ showInfoDiv.appendChild(officialSiteInfo);
       } else {
         showNetwork.innerHTML = 'Network: N/A';
       }
-      
+
       showInfoDiv.appendChild(showNetwork);
-                  // Append elements to the results container
+      // Append elements to the results container
       resultsContainer.appendChild(img);
       resultsContainer.appendChild(showInfoDiv);
 
       const viewSeasonsButton = document.createElement("button");
-viewSeasonsButton.className = "btn btn-primary"; // Add Bootstrap button classes
-viewSeasonsButton.innerText = "View Seasons";
-viewSeasonsButton.onclick = async function (event) {
+      viewSeasonsButton.className = "btn btn-primary"; // Add Bootstrap button classes
+      viewSeasonsButton.innerText = "View Seasons";
+      viewSeasonsButton.onclick = function (event) {
         if (!link.show.id) {
           return alert('No seasons found!');
         }
-      
-        try {
-          const res = await axios.get(`http://api.tvmaze.com/shows/${link.show.id}/seasons`);
-      
-          if (res.status !== 200) {
-            throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
-          }
-      
-          const seasons = res.data;
-      
-          // Convert the seasons data to a JSON string for simplicity
-          const seasonsDataString = JSON.stringify(seasons, null, 2);
-      
-          // Redirect to a new page with the seasons data as a query parameter
-          window.location.href = `view-seasons.html?seasonsData=${encodeURIComponent(seasonsDataString)}`;
-        } catch (e) {
-          alert(`Something went wrong while trying to get seasons! Error : ${e.message}`);
-        }
+        // Redirect to a new page with the seasons data as a query parameter
+        window.location.href = `view-seasons.html?id=${encodeURIComponent(link.show.id)}`;
       };
-      
+
       showInfoDiv.appendChild(viewSeasonsButton);
 
       const viewEpisodesButton = document.createElement("button");
-viewEpisodesButton.className = "btn btn-warning"; // Add Bootstrap button classes
-viewEpisodesButton.innerText = "View Episodes";
-viewEpisodesButton.onclick = async function (event) {
-  if (!link.show.id) {
-    return alert('No episodes found!');
-  }
+      viewEpisodesButton.className = "btn btn-warning"; // Add Bootstrap button classes
+      viewEpisodesButton.innerText = "View Episodes";
+      viewEpisodesButton.onclick = function (event) {
+        if (!link.show.id) {
+          return alert('No episodes found!');
+        }
+        window.location.href = `view-episodes.html?id=${encodeURIComponent(link.show.id)}`;
+      };
 
-  try {
-    const res = await axios.get(`http://api.tvmaze.com/shows/${link.show.id}/episodes`);
+      // Append the button to the showInfoDiv
+      showInfoDiv.appendChild(viewEpisodesButton);
 
-    if (res.status !== 200) {
-      throw new Error(`Response not OK : ${res.status}:${res.statusText}`);
-    }
-
-    const episodes = res.data;
-
-    // Convert the episodes data to a JSON string for simplicity
-    const episodesDataString = JSON.stringify(episodes, null, 2);
-
-    // Redirect to a new page with the episodes data as a query parameter
-    window.location.href = `view-episodes.html?episodesData=${encodeURIComponent(episodesDataString)}`;
-  } catch (e) {
-    alert(`Something went wrong while trying to get episodes! Error : ${e.message}`);
-  }
-};
-
-// Append the button to the showInfoDiv
-showInfoDiv.appendChild(viewEpisodesButton);
-   
     }
   }
 };

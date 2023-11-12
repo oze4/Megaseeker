@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const resultsContainer2 = document.getElementById('results-container2');
+  const urlParams = new URLSearchParams(window.location.search);
+  const showId = urlParams.get('id');
 
   try {
+    if (!showId) {
+      throw new Error("Show ID not found, unable to gather data.");
+    }
+    
     // Fetch data from the API endpoint for episodes based on the show ID
     // Example: Fetch episodes page by page
-    const response = await fetch('https://api.tvmaze.com/seasons/1/episodes');
+    const response = await fetch(`https://api.tvmaze.com/seasons/${showId}/episodes`);
     const episodesData = await response.json();
 
     // Process and display results on the page
