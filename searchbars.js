@@ -18,7 +18,7 @@ async function handleSearchKeyUp(event) {
       return;
     }
 
-    const res = await axios.get(`http://api.tvmaze.com/search/shows/?q=${inputVal}`);
+    const res = await axios.get(`https://api.tvmaze.com/search/shows/?q=${inputVal}`);
 
     if (res.status === 200) {
       EL_SEARCH_RESULTS.innerHTML = '';

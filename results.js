@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const showId = urlParams.get('id');
 
-  const res = await axios.get(`http://api.tvmaze.com/shows/${showId}?embed[]=episodes&embed=cast`);
-  console.log(res.data);
+  const res = await axios.get(`https://api.tvmaze.com/shows/${showId}?embed[]=seasons&embed[]=episodes&embed[]=cast`);
+
   // Process and display results on the results page
   renderShow(res.data);
 
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 const renderShow = (show) => {
   EL_RESULTS_CONTAINER.innerHTML = '';
+  console.log(show)
   if (show.image) {
     // Create elements for image and show information
     const img = document.createElement("IMG");
@@ -79,6 +80,20 @@ const renderShow = (show) => {
     }
 
     showInfoDiv.appendChild(showNetwork);
+
+    const castEl = document.createElement("pre");
+    castEl.innerHTML = 'Cast: ';
+    castEl.innerHTML += JSON.stringify(show._embedded.cast, null, 2);
+    castEl.style.maxHeight = '50vh';
+    castEl.style.overflow = 'scroll';
+    showInfoDiv.appendChild(castEl);
+
+    const seasonsEl = document.createElement("pre");
+    seasonsEl.innerHTML = 'Seasons: ';
+    seasonsEl.innerHTML += JSON.stringify(show._embedded.seasons, null, 2);
+    seasonsEl.style.maxHeight = '50vh';
+    seasonsEl.style.overflow = 'scroll';
+    showInfoDiv.appendChild(seasonsEl);
 
     // Append elements to the results container
     EL_RESULTS_CONTAINER.appendChild(img);
